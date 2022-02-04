@@ -53,9 +53,42 @@ class Calculator {
     this.prevText = ''
   }
 
+  helperFunction(num) {
+    const stringNumber = num.toString()
+    const integerDigits = parseFloat(stringNumber.split('.')[0])
+    const decimalDigits = stringNumber.split('.')[1]
+    let integerDisplay
+    if (isNaN(integerDigits)) {
+      integerDisplay = ''
+    } else {
+      integerDisplay = integerDigits.toLocaleString('en', {
+        maximumFractionDigits: 0
+      })
+    }
+    if (decimalDigits != null) {
+      return `${integerDisplay}.${decimalDigits}`
+    } else {
+      return integerDisplay
+    }
+  }
+
   updateDisplay() {
-    this.currField.innerText = this.currText
-    this.prevField.innerText = this.prevText
+    this.currField.innerText = this.helperFunction(this.currText)
+    if (this.operation === undefined) {
+      this.prevField.innerText = this.prevText
+    } else {
+      this.prevField.innerText =
+        this.helperFunction(this.prevText) + this.operation
+    }
+  }
+  updateDisplayEqual() {
+    this.currField.innerText = this.helperFunction(this.currText)
+    if (this.operation === undefined) {
+      this.prevField.innerText = this.prevText
+    } else {
+      this.prevField.innerText =
+        this.helperFunction(this.prevText) + this.operation
+    }
   }
 }
 
@@ -84,7 +117,7 @@ operationsButtons.forEach((button) => {
 
 equalsButton.addEventListener('click', () => {
   calculator.compute()
-  calculator.updateDisplay()
+  calculator.updateDisplayEqual()
 })
 deleteButton.addEventListener('click', () => {
   calculator.delete()
